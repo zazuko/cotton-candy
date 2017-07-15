@@ -3,8 +3,23 @@ const Promise = require('bluebird')
 
 const readFile = Promise.promisify(fs.readFile)
 
+function load (resolve, filePath) {
+  return Promise.resolve().then(() => {
+    return resolve(filePath)
+  }).then((resolvedFilePath) => {
+    return readFile(resolvedFilePath, 'utf-8')
+  })
+}
+
 function compile (content, args) {
   return Function(args, 'return `' + content + '`') // eslint-disable-line no-new-func
+}
+
+function run (content, locals) {
+  const keys = Object.keys(locals)
+  const values = keys.map(key => locals[key])
+
+  return compile(content, keys).apply(null, values)
 }
 
 function render (options, filePath, locals) {
@@ -12,21 +27,15 @@ function render (options, filePath, locals) {
   options.plugins = options.plugins || []
   options.resolve = options.resolve || ((p) => p)
 
+  options.load = load.bind(null, options.resolve)
   options.render = render.bind(null, options)
 
-  const keys = Object.keys(locals)
-  const values = keys.map(key => locals[key])
-
-  return Promise.resolve().then(() => {
-    return options.resolve(filePath)
-  }).then((resolvedFilePath) => {
-    return readFile(resolvedFilePath, 'utf-8')
-  }).then((content) => {
+  return options.load(filePath).then((content) => {
     return Promise.reduce(options.plugins, (content, plugin) => {
       return plugin(content, options, filePath, locals)
     }, content)
   }).then((content) => {
-    return compile(content, keys).apply(null, values)
+    return run(content, locals)
   })
 }
 

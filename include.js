@@ -16,7 +16,7 @@ function include (content, options, filePath, locals) {
   return Promise.all(uniqueMatches.map((match) => {
     const filePath = match.match(regexFilePath).pop()
 
-    return options.render(filePath, locals)
+    return options.load(filePath)
   })).then((includesContent) => {
     return includesContent.reduce((content, includeContent, index) => {
       return content.split(uniqueMatches[index]).join(includeContent)
