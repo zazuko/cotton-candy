@@ -12,13 +12,13 @@
     "url": "https://github.com/zazuko/cotton-candy/issues"
   },
   "scripts": {
-    "lint": "standard",
-    "test": "npm run lint"
+    "test": "standard && mocha"
   },
   "dependencies": {
     "bluebird": "^3.5.0"
   },
   "devDependencies": {
+    "mocha": "^3.4.2",
     "standard": "^10.0.2"
   }
 }
