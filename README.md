@@ -11,7 +11,7 @@ ES6 Template String template engine
 # Features
 - Base features from [ES6](https://tc39.github.io/ecma262/#sec-template-literals) Template Literals [1],[2]
 - Includes ``${include('cwd:views/header.html')}`` for theming of sites. (Supports configTools paths.)
-- Setters ``${get('moduleHeader','<script></script>')}``and Getters ``${get('moduleHeader')}`` inside templates allow injecting HTML inside included templates.
+- Setters ``${set('moduleHeader','<script></script>')}``and Getters ``${get('moduleHeader')}`` inside templates allow injecting HTML inside included templates.
 
 
 
